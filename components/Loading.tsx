@@ -1,27 +1,34 @@
 import { WhatsApp } from '@material-ui/icons';
-import { Circle } from 'better-react-spinkit';
 import styled from 'styled-components';
+import { ClipLoader } from 'react-spinners';
+
+const style = {
+  position: 'fixed',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+};
 
 const Loading = () => {
   return (
-    <Wrapper>
-      <WhatsApp />
-      <Circle color="#3CBC28" size={60} />
-    </Wrapper>
+    <div style={style}>
+      <WhatsApp style={{ 'font-size': '150px' }} />
+      <ClipLoader color="#3CBC28" size={80} />
+    </div>
   );
 };
 
 const Wrapper = styled.div`
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  svg {
-    width: 200px;
-    height: 200px;
-    color: #20c340;
-    margin-bottom: 10px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  .center {
+    margin-inline: auto;
   }
 `;
 

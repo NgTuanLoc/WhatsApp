@@ -1,21 +1,33 @@
 import { Avatar, IconButton, Button } from '@material-ui/core';
-import { MoreVert, Chat, SearchOutlined } from '@material-ui/icons';
+import { MoreVert, SearchOutlined, Chat } from '@material-ui/icons';
 import styled from 'styled-components';
 import * as EmailValidator from 'email-validator';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { useCollection } from 'react-firebase-hooks/firestore';
 
 import { auth, db } from '../firebase';
+import ChatBox from './Chat';
+import Loading from './Loading';
 
 export interface ISidebarProps {}
 
 export default function Sidebar(props: ISidebarProps) {
-  const [user] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
+  const userChatRef = db
+    .collection('chats')
+    .where('users', 'array-contains', user?.email);
+  const [chatsSnapshot] = useCollection(userChatRef);
+
   const createChat = () => {
     const input = prompt('Please enter an email address for the user ');
 
     if (!input) return null;
 
-    if (EmailValidator.validate(input) && input !== user?.email) {
+    if (
+      EmailValidator.validate(input) &&
+      !chatAlreadyExists(input) &&
+      input !== user?.email
+    ) {
       // We need to add the chat into the db 'chats' collection
       db.collection('chats').add({
         users: [user?.email, input],
@@ -23,12 +35,24 @@ export default function Sidebar(props: ISidebarProps) {
     }
   };
 
-  const chatAlreadyExists = (recipientEmail: any) => {};
+  const chatAlreadyExists = (recipientEmail: string) => {
+    return !!chatsSnapshot?.docs.find((chat) => {
+      return (
+        chat.data().users.find((user: string) => user === recipientEmail)
+          ?.length > 0
+      );
+    });
+  };
+
+  if (loading) return <Loading />;
 
   return (
     <Container>
       <Header>
-        <UserAvatar onClick={() => auth.signOut()} />
+        <UserAvatar
+          src={user?.photoURL ? user?.photoURL : ''}
+          onClick={() => auth.signOut()}
+        />
         <IconsContainer>
           <IconButton>
             <Chat />
@@ -45,6 +69,11 @@ export default function Sidebar(props: ISidebarProps) {
       </Search>
 
       <SidebarButton onClick={createChat}>Start a new chat</SidebarButton>
+
+      {/* List of Chats */}
+      {chatsSnapshot?.docs.map((chat: any) => {
+        return <ChatBox key={chat.id} id={chat.id} users={chat.data().users} />;
+      })}
     </Container>
   );
 }
