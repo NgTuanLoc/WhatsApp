@@ -78,7 +78,20 @@ export default function Sidebar(props: ISidebarProps) {
   );
 }
 
-const Container = styled.aside``;
+const Container = styled.div`
+  flex: 0.45;
+  border-right: 1px solid whitesmoke;
+  height: 100vh;
+  min-width: 300px;
+  max-width: 35px;
+  overflow-y: scroll;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -msoverflow-style: none;
+  scrollbar-width: none;
+`;
 
 const Header = styled.div`
   display: flex;

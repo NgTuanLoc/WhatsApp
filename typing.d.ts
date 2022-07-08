@@ -4,6 +4,6 @@ export interface IChat {
 }
 
 export interface IChatScreen {
-  chat: string[];
-  messages: string[];
+  chat: any;
+  messages: any;
 }
