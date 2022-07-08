@@ -22,7 +22,7 @@ const ChatScreen = ({ chat, messages }: IChatScreen) => {
   const [user] = useAuthState(auth);
   const [input, setInput] = useState<string>('');
   const router = useRouter();
-  const endOfMessageRef = useRef(null);
+  const endOfMessageRef = useRef<any>(null);
   const [messagesSnapshot] = useCollection(
     db
       .collection('chats')
@@ -37,10 +37,12 @@ const ChatScreen = ({ chat, messages }: IChatScreen) => {
   );
 
   const ScrollToBottom = () => {
-    endOfMessageRef.current.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-    });
+    if (endOfMessageRef) {
+      endOfMessageRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
   };
 
   const sendMessage = (e: any) => {
