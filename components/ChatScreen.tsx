@@ -6,6 +6,7 @@ import {
   AttachFileOutlined,
   InsertEmoticonOutlined,
   Mic,
+  Send,
 } from '@material-ui/icons';
 import { useState, useRef } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
@@ -134,9 +135,9 @@ const ChatScreen = ({ chat, messages }: IChatScreen) => {
       <InputContainer>
         <InsertEmoticonOutlined />
         <Input value={input} onChange={(e) => setInput(e.target.value)} />
-        <button hidden disabled={!input} type="submit" onClick={sendMessage}>
-          SendMessage
-        </button>
+        <SendButton disabled={!input} type="submit" onClick={sendMessage}>
+          <Send />
+        </SendButton>
         <Mic />
       </InputContainer>
     </Container>
@@ -184,7 +185,7 @@ const MessageContainer = styled.div`
 `;
 
 const EndOfMessage = styled.div`
-  margin-bottom: 80px;
+  margin-bottom: 50px;
 `;
 
 const InputContainer = styled.form`
@@ -209,4 +210,17 @@ const Input = styled.input`
   border: none;
   border-radius: 10px;
   margin: auto 10px;
+`;
+
+const SendButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding: 10px;
+  background-color: #007dc06b;
+  border: transparent;
+  svg {
+    color: pink;
+  }
 `;
