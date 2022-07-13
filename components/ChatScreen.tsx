@@ -108,7 +108,11 @@ const ChatScreen = ({ chat, messages }: IChatScreen) => {
           <Avatar>{recipientEmail[0]}</Avatar>
         )}
         <HeaderInformation>
-          <h3>{recipientEmail}</h3>
+          <h3>
+            {recipientEmail.lenght > 15
+              ? `${recipientEmail.substring(0, 10)}...`
+              : recipientEmail}
+          </h3>
           {recipientSnapshot ? (
             <p>
               Last active:{' '}
