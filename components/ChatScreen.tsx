@@ -109,8 +109,8 @@ const ChatScreen = ({ chat, messages }: IChatScreen) => {
         )}
         <HeaderInformation>
           <h3>
-            {recipientEmail.lenght > 15
-              ? `${recipientEmail.substring(0, 10)}...`
+            {recipientEmail.length > 12
+              ? `${recipientEmail.substring(0, 12)}...`
               : recipientEmail}
           </h3>
           {recipientSnapshot ? (
