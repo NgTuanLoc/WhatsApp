@@ -19,13 +19,11 @@ import { IChatScreen } from '../typing';
 import { auth, db } from '../firebase';
 import Message from '../components/Message';
 import { getRecipientEmail } from '../utils/getRecipientEmail';
+import { useGlobalContext } from '../context/context';
 
-const ChatScreen = ({
-  chat,
-  messages,
-  setHideSidebar,
-  hideSidebar,
-}: IChatScreen) => {
+const ChatScreen = ({ chat, messages }: IChatScreen) => {
+  const { hideSidebar, setHideSidebar } = useGlobalContext();
+
   const [user] = useAuthState(auth);
   const [input, setInput] = useState<string>('');
   const router = useRouter();
@@ -125,7 +123,10 @@ const ChatScreen = ({
           )}
         </HeaderInformation>
         <HeaderIcons>
-          <IconButton onClick={() => setHideSidebar(!hideSidebar)}>
+          <IconButton
+            className="display-none-in-large-device"
+            onClick={() => setHideSidebar(!hideSidebar)}
+          >
             <ToggleOffOutlined />
           </IconButton>
           <IconButton>

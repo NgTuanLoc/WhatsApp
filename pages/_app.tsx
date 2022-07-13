@@ -7,6 +7,7 @@ import firebase from 'firebase';
 import { auth, db } from '../firebase';
 import Login from './Login';
 import Loading from '../components/Loading';
+import { AppProvider } from '../context/context';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [user, loading] = useAuthState(auth);
@@ -30,7 +31,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     return <Login />;
   }
 
-  return <Component {...pageProps} />;
+  return (
+    <AppProvider>
+      <Component {...pageProps} />
+    </AppProvider>
+  );
 }
 
 export default MyApp;

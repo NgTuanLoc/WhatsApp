@@ -9,10 +9,11 @@ import ChatScreen from '../../components/ChatScreen';
 import { auth, db } from '../../firebase';
 import Loading from '../../components/Loading';
 import { getRecipientEmail } from '../../utils/getRecipientEmail';
+import { AppProvider, useGlobalContext } from '../../context/context';
 
 const ChatPage = ({ chat, messages }: any) => {
   const [user, loading] = useAuthState(auth);
-  const [hideSidebar, setHideSidebar] = useState(false);
+  const { hideSidebar } = useGlobalContext();
 
   if (loading) return <Loading />;
 
@@ -21,15 +22,10 @@ const ChatPage = ({ chat, messages }: any) => {
       <Head>
         <title>Chat with {getRecipientEmail(chat.users, user)}</title>
       </Head>
-      <Sidebar hideSidebar={hideSidebar} setHideSidebar={setHideSidebar} />
+      <Sidebar />
 
       <ChatContainer hideSidebar={hideSidebar}>
-        <ChatScreen
-          chat={chat}
-          messages={messages}
-          setHideSidebar={setHideSidebar}
-          hideSidebar={hideSidebar}
-        />
+        <ChatScreen chat={chat} messages={messages} />
       </ChatContainer>
     </Container>
   );
@@ -76,7 +72,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   };
 };
 
-const Container = styled.div`
+const Container = styled.main`
   display: flex;
 `;
 
@@ -84,6 +80,8 @@ const ChatContainer = styled.div<any>`
   flex: 1;
   overflow: scroll;
   height: 100vh;
+  transition: all 1s ease-in-out;
+
   @media only screen and (max-width: 750px) {
     flex: ${(props) => (props.hideSidebar ? 1 : 0)};
   }

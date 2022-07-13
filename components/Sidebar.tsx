@@ -4,27 +4,22 @@ import styled from 'styled-components';
 import * as EmailValidator from 'email-validator';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollection } from 'react-firebase-hooks/firestore';
-import { Dispatch, SetStateAction } from 'react';
 import { ToggleOffOutlined } from '@material-ui/icons';
 
 import { auth, db } from '../firebase';
 import ChatBox from './Chat';
 import Loading from './Loading';
+import { useGlobalContext } from '../context/context';
 
-export interface ISidebarProps {
-  hideSidebar: boolean;
-  setHideSidebar: Dispatch<SetStateAction<boolean>>;
-}
+export interface ISidebarProps {}
 
-export default function Sidebar({
-  hideSidebar,
-  setHideSidebar,
-}: ISidebarProps) {
+export default function Sidebar({}: ISidebarProps) {
   const [user, loading] = useAuthState(auth);
   const userChatRef = db
     .collection('chats')
     .where('users', 'array-contains', user?.email);
   const [chatsSnapshot] = useCollection(userChatRef);
+  const { hideSidebar, setHideSidebar } = useGlobalContext();
 
   const createChat = () => {
     const input = prompt('Please enter an email address for the user ');
@@ -62,7 +57,10 @@ export default function Sidebar({
           onClick={() => auth.signOut()}
         />
         <IconsContainer>
-          <IconButton onClick={() => setHideSidebar(!hideSidebar)}>
+          <IconButton
+            className="display-none-in-large-device"
+            onClick={() => setHideSidebar(!hideSidebar)}
+          >
             <ToggleOffOutlined />
           </IconButton>
           <IconButton>
