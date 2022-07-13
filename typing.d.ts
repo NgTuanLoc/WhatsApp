@@ -6,4 +6,6 @@ export interface IChat {
 export interface IChatScreen {
   chat: any;
   messages: any;
+  setHideSidebar: any;
+  hideSidebar: boolean;
 }

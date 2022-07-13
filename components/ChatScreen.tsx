@@ -7,6 +7,7 @@ import {
   InsertEmoticonOutlined,
   Mic,
   Send,
+  ToggleOffOutlined,
 } from '@material-ui/icons';
 import { useState, useRef } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
@@ -19,7 +20,12 @@ import { auth, db } from '../firebase';
 import Message from '../components/Message';
 import { getRecipientEmail } from '../utils/getRecipientEmail';
 
-const ChatScreen = ({ chat, messages }: IChatScreen) => {
+const ChatScreen = ({
+  chat,
+  messages,
+  setHideSidebar,
+  hideSidebar,
+}: IChatScreen) => {
   const [user] = useAuthState(auth);
   const [input, setInput] = useState<string>('');
   const router = useRouter();
@@ -119,6 +125,9 @@ const ChatScreen = ({ chat, messages }: IChatScreen) => {
           )}
         </HeaderInformation>
         <HeaderIcons>
+          <IconButton onClick={() => setHideSidebar(!hideSidebar)}>
+            <ToggleOffOutlined />
+          </IconButton>
           <IconButton>
             <AttachFileOutlined />
           </IconButton>

@@ -4,14 +4,22 @@ import styled from 'styled-components';
 import * as EmailValidator from 'email-validator';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollection } from 'react-firebase-hooks/firestore';
+import { Dispatch, SetStateAction } from 'react';
+import { ToggleOffOutlined } from '@material-ui/icons';
 
 import { auth, db } from '../firebase';
 import ChatBox from './Chat';
 import Loading from './Loading';
 
-export interface ISidebarProps {}
+export interface ISidebarProps {
+  hideSidebar: boolean;
+  setHideSidebar: Dispatch<SetStateAction<boolean>>;
+}
 
-export default function Sidebar(props: ISidebarProps) {
+export default function Sidebar({
+  hideSidebar,
+  setHideSidebar,
+}: ISidebarProps) {
   const [user, loading] = useAuthState(auth);
   const userChatRef = db
     .collection('chats')
@@ -47,13 +55,16 @@ export default function Sidebar(props: ISidebarProps) {
   if (loading) return <Loading />;
 
   return (
-    <Container>
+    <Container hideSidebar={hideSidebar}>
       <Header>
         <UserAvatar
           src={user?.photoURL ? user?.photoURL : ''}
           onClick={() => auth.signOut()}
         />
         <IconsContainer>
+          <IconButton onClick={() => setHideSidebar(!hideSidebar)}>
+            <ToggleOffOutlined />
+          </IconButton>
           <IconButton>
             <Chat />
           </IconButton>
@@ -78,19 +89,23 @@ export default function Sidebar(props: ISidebarProps) {
   );
 }
 
-const Container = styled.div`
+const Container = styled.div<any>`
   flex: 0.45;
   border-right: 1px solid whitesmoke;
   height: 100vh;
-  min-width: 300px;
-  max-width: 35px;
+
   overflow-y: scroll;
+  transition: all 1s ease-in-out;
 
   ::-webkit-scrollbar {
     display: none;
   }
   -msoverflow-style: none;
   scrollbar-width: none;
+
+  @media only screen and (max-width: 750px) {
+    flex: ${(props) => (props.hideSidebar ? 0 : 1)};
+  }
 `;
 
 const Header = styled.div`

@@ -2,6 +2,7 @@ import Head from 'next/head';
 import styled from 'styled-components';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { GetServerSideProps } from 'next';
+import { useState } from 'react';
 
 import Sidebar from '../../components/Sidebar';
 import ChatScreen from '../../components/ChatScreen';
@@ -11,6 +12,7 @@ import { getRecipientEmail } from '../../utils/getRecipientEmail';
 
 const ChatPage = ({ chat, messages }: any) => {
   const [user, loading] = useAuthState(auth);
+  const [hideSidebar, setHideSidebar] = useState(false);
 
   if (loading) return <Loading />;
 
@@ -19,9 +21,15 @@ const ChatPage = ({ chat, messages }: any) => {
       <Head>
         <title>Chat with {getRecipientEmail(chat.users, user)}</title>
       </Head>
-      <Sidebar />
-      <ChatContainer>
-        <ChatScreen chat={chat} messages={messages} />
+      <Sidebar hideSidebar={hideSidebar} setHideSidebar={setHideSidebar} />
+
+      <ChatContainer hideSidebar={hideSidebar}>
+        <ChatScreen
+          chat={chat}
+          messages={messages}
+          setHideSidebar={setHideSidebar}
+          hideSidebar={hideSidebar}
+        />
       </ChatContainer>
     </Container>
   );
@@ -60,9 +68,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     ...chatRes.data(),
   };
 
-  console.log(messages);
-  console.log(chat);
-
   return {
     props: {
       messages: JSON.stringify(messages),
@@ -75,11 +80,13 @@ const Container = styled.div`
   display: flex;
 `;
 
-const ChatContainer = styled.div`
+const ChatContainer = styled.div<any>`
   flex: 1;
   overflow: scroll;
   height: 100vh;
-
+  @media only screen and (max-width: 750px) {
+    flex: ${(props) => (props.hideSidebar ? 1 : 0)};
+  }
   ::-webkit-scrollbar {
     display: none;
   }
