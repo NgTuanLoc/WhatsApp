@@ -169,7 +169,7 @@ const Header = styled.div`
   top: 0;
   display: flex;
   align-items: center;
-  height: 70px;
+  height: 100px;
   padding: 10px;
   border-bottom: 1px solid whitesmoke;
 `;
